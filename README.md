@@ -62,7 +62,7 @@ The next milestone for this project is installing and configuring Proxmox on the
 ## Future Plans
 
 1. **Proxmox Installation:**
-   - Install Proxmox on Ubuntu and ensure that it integrates seamlessly with the system.
+   - Install Proxmox on BC-250 and ensure that it integrates seamlessly with the system.
 
 2. **Cluster Setup:**
    - Set up a Proxmox cluster with multiple BC-250 units to create a high-performance, virtualized environment.
