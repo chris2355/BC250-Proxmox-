@@ -53,21 +53,69 @@ Here’s the fix that worked for installing Ubuntu:
 6. **Reboot the System:**
    - After making these changes, type `reboot` to restart the system. Ubuntu should now load without issues and be fully updatable.
 
-### 3. Next Steps: Proxmox Setup
 
-The next milestone for this project is installing and configuring Proxmox on the BC-250. Once Ubuntu is running stably, the goal is to install Proxmox and create a Proxmox cluster with multiple BC-250 units to run virtual machines and containers.
+# Proxmox Installation Instructions
 
----
+The process for setting up Proxmox is similar to setting up Ubuntu, but with some key differences. Follow these steps carefully to ensure a smooth installation.
 
-## Future Plans
+## Step 1: Download and Prepare Installation Media
 
-1. **Proxmox Installation:**
-   - Install Proxmox on BC-250 and ensure that it integrates seamlessly with the system.
+1. Download the latest Proxmox release from the [official Proxmox website](https://www.proxmox.com/en/proxmox-ve).
+2. Create a bootable USB drive with the Proxmox installer. You can use tools like **Rufus** for this process.
+   - In Rufus, select the Proxmox ISO, choose the appropriate USB drive, and click "Start" to create the bootable media.
 
-2. **Cluster Setup:**
+## Step 2: Install Proxmox
+
+1. Insert the bootable USB into the BC-250 and power it on.
+2. When the Proxmox installation screen appears, **highlight** the "Graphical Install" option but **don’t click** on it yet.
+3. Press the **‘e’ key** to enter the GRUB bootloader options.
+4. Find the line starting with `linux` and add `nomodeset` at the end of the line. This ensures proper display output during installation.
+   - Example: 
+     ```
+     linux /install.amd/vmlinuz nomodeset
+     ```
+5. Press **F10** or **Ctrl+X** to continue the installation with the modified boot parameters.
+6. Proceed with the Proxmox installation as you would with any standard Linux installation.
+
+## Step 3: Post-Installation Configuration
+
+After the installation completes, follow these steps to finalize the setup:
+
+1. **Reboot the System:**
+   - After the installation, during the reboot process, repeatedly tap the **Shift** key to access the GRUB boot menu.
+2. **Access Recovery Mode:**
+   - From the GRUB menu, select **Advanced Options** and then choose **Recovery Mode** to boot into a special environment for making changes.
+3. **Modify GRUB Configuration:**
+   - Once in recovery mode, open the root console.
+   - Edit the GRUB configuration file by running:
+     ```bash
+     nano /etc/default/grub
+     ```
+   - Find the line starting with `GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"`.
+   - Modify it to include `nomodeset` at the end:
+     ```bash
+     GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nomodeset"
+     ```
+4. **Update GRUB:**
+   - After saving the changes, update the GRUB configuration to apply the changes:
+     ```bash
+     grub-mkconfig -o /boot/efi/EFI/proxmox/grub.cfg
+     ```
+
+5. **Reboot the System:**
+   - After updating GRUB, reboot the system:
+     ```bash
+     reboot
+     ```
+
+Now, Proxmox should boot correctly, and the system should display properly without graphical issues.
+
+# Future Plans
+ 
+1. **Cluster Setup:**
    - Set up a Proxmox cluster with multiple BC-250 units to create a high-performance, virtualized environment.
 
-3. **Performance Testing:**
+2. **Performance Testing:**
    - Once the cluster is established, conduct performance testing to ensure the BC-250 can handle the virtual machines and workloads expected from the setup.
 
 ---
